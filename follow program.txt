@@ -1,0 +1,88 @@
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+int i=0,j=0,n,p;
+char a[20][20],Res[20];
+char subRes[20];
+void addResSet(char[],char);
+void follow(char* Res,char c);
+void first(char* Res,char c);
+int main()
+{
+int i;
+int choice;
+char c,ch;
+
+printf("How many no.of productions: ");
+scanf("%d", &n);
+printf(" Enter %d productions\nProductions having multiple terms must have separate productions \n", n);
+for(i=0;i<n;i++)
+scanf("%s",a[i]);
+do
+{
+printf("Find FOLLOW of --->");
+scanf(" %c",&c);
+follow(Res,c);
+printf("FOLLOW(%c) = { ",c);
+for(i=0;Res[i]!='\0';i++)
+printf(" %c ",Res[i]);
+printf(" }\n");
+printf("Press 0 to continue)");
+scanf("%d",&choice);
+}while(choice==0);
+}
+
+
+
+void addResSet(char Res[],char val)
+{
+int k;
+for(k=0 ;Res[k]!='\0';k++)
+if(Res[k]==val)
+return;
+Res[k]=val;
+Res[k+1]='\0';
+}
+
+void follow(char* Res,char c)
+{
+int k;
+subRes[0]='\0';
+Res[0]='\0';
+if(a[0][0]==c)addResSet(Res,'$');
+for(i=0;i<n;i++)
+{
+for(j=2;j<strlen(a[i]);j++)
+ {
+if(a[i][j]==c)
+  {
+if(a[i][j+1]!='\0')first(subRes,a[i][j+1]);
+if(a[i][j+1]=='\0'&&c!=a[i][0])
+follow(subRes,a[i][0]);
+for(k=0;subRes[k]!='\0';k++)
+addResSet(Res,subRes[k]);
+  }
+ }
+}
+}
+
+void first(char* R,char c)
+{
+int k,m;
+if(!(isupper(c))&&c!='#')
+addResSet(R,c);
+for(k=0;k<n;k++)
+{
+if(a[k][0]==c)
+{
+if(a[k][2]=='#'&&c!=a[i][0])follow(R,a[i][0]);
+
+else if((!(isupper(a[k][2])))&&a[k][2]!='#')
+addResSet(R,a[k][2]);
+else first(R,a[k][2]);
+for(m=0;R[m]!='\0';m++)
+addResSet(Res,R[m]);
+}
+}
+}
+
